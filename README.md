@@ -1,4 +1,6 @@
-# CareerAI
+# PIDI-HACKTEAM
+
+## CareerAI
 
 **Find the Right Job. Stay Ahead of AI.**
 
