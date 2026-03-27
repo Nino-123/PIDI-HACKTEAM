@@ -47,10 +47,10 @@ src/
 
 ```bash
 # Install dependencies
-pnpm install
+npm install
 
 # Start dev server
-pnpm dev
+npm dev
 ```
 
 Then open [http://localhost:5173](http://localhost:5173).
@@ -58,7 +58,7 @@ Then open [http://localhost:5173](http://localhost:5173).
 ### Build
 
 ```bash
-pnpm build
+npm build
 ```
 
 ---
