@@ -46,7 +46,25 @@ body {
   z-index: 0;
 }
 
-.content { position: relative; z-index: 1; }
+.content {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 30% 20%, rgba(99,102,241,0.18), transparent 42%),
+              radial-gradient(circle at 80% 60%, rgba(16,185,129,0.14), transparent 36%),
+              radial-gradient(circle at 50% 80%, rgba(239,68,68,0.1), transparent 46%);
+  opacity: 0.22;
+  filter: blur(36px);
+}
+
 
 /* Glass */
 .glass {
