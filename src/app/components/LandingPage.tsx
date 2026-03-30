@@ -1,5 +1,6 @@
 // src/app/components/LandingPage.tsx
 
+import { useEffect, useRef, useState } from 'react';
 import { MiniDashboard } from './figma';
 
 interface LandingPageProps {
@@ -7,6 +8,62 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ onStart }: LandingPageProps) {
+  const [animatedValues, setAnimatedValues] = useState(() => STATS.map(() => 0));
+  const statsRef = useRef<HTMLDivElement | null>(null);
+  const hasAnimatedRef = useRef(false);
+
+  useEffect(() => {
+    const statsElement = statsRef.current;
+    if (!statsElement) return;
+
+    let frameId = 0;
+    let observer: IntersectionObserver | null = null;
+
+    const startCountUp = () => {
+      if (hasAnimatedRef.current) return;
+      hasAnimatedRef.current = true;
+
+      const durationMs = 1200;
+      const startTime = performance.now();
+
+      const animate = (now: number) => {
+        const progress = Math.min((now - startTime) / durationMs, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+        setAnimatedValues(
+          STATS.map(stat => Math.round(stat.value * easedProgress)),
+        );
+
+        if (progress < 1) {
+          frameId = requestAnimationFrame(animate);
+          return;
+        }
+
+        setAnimatedValues(STATS.map(stat => stat.value));
+      };
+
+      frameId = requestAnimationFrame(animate);
+    };
+
+    observer = new IntersectionObserver(
+      entries => {
+        const [entry] = entries;
+        if (entry?.isIntersecting) {
+          startCountUp();
+          observer?.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    );
+
+    observer.observe(statsElement);
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId);
+      observer?.disconnect();
+    };
+  }, []);
+
   return (
     <div className="content">
       {/* ── Hero ─────────────────────────────────── */}
@@ -30,21 +87,14 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             intelligent platform.
           </p>
 
-          <div className="hero-ctas">
-            <button className="btn-primary" onClick={onStart}>
-              Get Started Free →
-            </button>
-          </div>
-
-          <div className="hero-stats">
-            {([
-              ['50K+', 'Careers analysed'],
-              ['94%',  'Accuracy rate'],
-              ['200+', 'Job categories'],
-            ] as const).map(([num, label]) => (
-              <div className="stat" key={label}>
-                <div className="stat-num">{num}</div>
-                <div className="stat-label">{label}</div>
+          <div className="hero-stats" ref={statsRef}>
+            {STATS.map((stat, index) => (
+              <div className="stat" key={stat.label}>
+                <div className="stat-num">
+                  {formatStatValue(animatedValues[index])}
+                  {stat.suffix}
+                </div>
+                <div className="stat-label">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -81,16 +131,37 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       </div>
 
       {/* ── Bottom CTA ───────────────────────────── */}
-      <div className="cta-bottom" style={{ maxWidth: 1200, margin: '0 auto 4rem' }}>
+      <div className="cta-bottom" style={{ maxWidth: 1100, margin: '0 auto 4rem' }}>
         <h2>Start Building Your Future</h2>
         <p>Join thousands of professionals who use CareerAI to make smarter career decisions.</p>
         <button className="btn-primary" onClick={onStart}>
           Analyse My CV Now →
         </button>
       </div>
+
+      <footer className="landing-footer">
+        PIDI Hackathon Team © 2026 CareerAI. All rights reserved
+      </footer>
     </div>
   );
 }
+
+const formatStatValue = (value: number) => {
+  if (value >= 1000) {
+    return new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+
+  return value.toString();
+};
+
+const STATS = [
+  { value: 50_000, suffix: '+', label: 'Careers analysed' },
+  { value: 94, suffix: '%', label: 'Accuracy rate' },
+  { value: 200, suffix: '+', label: 'Job categories' },
+] as const;
 
 /* ── Static data ────────────────────────────── */
 const FEATURES = [
