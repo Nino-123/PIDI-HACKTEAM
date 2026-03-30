@@ -13,6 +13,7 @@ export default function UploadPage({ onNext }: UploadPageProps) {
   const [progress,  setProgress]  = useState(0);
   const [analyzing, setAnalyzing] = useState(false);
   const [inputKey,  setInputKey]  = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
 
   function simulateUpload() {
     setProgress(0);
@@ -47,6 +48,12 @@ export default function UploadPage({ onNext }: UploadPageProps) {
   }
 
   function handleAnalyze() {
+    if (!file || progress < 100) {
+      setErrorMessage('Drop your file first to analyze');
+      setTimeout(() => setErrorMessage(''), 2000);
+      return;
+    }
+    setErrorMessage('');
     setAnalyzing(true);
     setTimeout(() => { setAnalyzing(false); onNext(); }, 2000);
   }
@@ -103,13 +110,13 @@ export default function UploadPage({ onNext }: UploadPageProps) {
 
           <div style={{ marginTop: '2rem' }}>
             <button
-              className="btn-primary"
+              className={`btn-primary ${(!file || progress < 100) ? 'btn-disabled' : ''}`}
               onClick={handleAnalyze}
-              disabled={!file || progress < 100}
               style={{ opacity: (!file || progress < 100) ? 0.5 : 1 }}
             >
               Analyse CV →
             </button>
+            {errorMessage && <div className="error-text">{errorMessage}</div>}
           </div>
         </>
       )}

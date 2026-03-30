@@ -1,6 +1,5 @@
 // src/app/components/LandingPage.tsx
 
-import React from 'react';
 import { MiniDashboard } from './figma';
 
 interface LandingPageProps {

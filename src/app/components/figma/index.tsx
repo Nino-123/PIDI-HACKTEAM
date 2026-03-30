@@ -3,8 +3,6 @@
 // The "figma" folder mirrors design handoff components that map
 // directly to Figma frames / design tokens.
 
-import React from 'react';
-
 /* ─────────────────────────────────────────────
    Design tokens (mirrors Figma variables)
 ───────────────────────────────────────────── */

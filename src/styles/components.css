@@ -22,8 +22,8 @@
   padding-top: 80px;
 }
 .nav-logo {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.4rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
   font-weight: 800;
   background: linear-gradient(135deg, #818CF8, #C084FC);
   -webkit-background-clip: text;
@@ -83,7 +83,7 @@
   animation: pulse 2s infinite;
 }
 .hero-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 3.5rem;
   font-weight: 800;
   line-height: 1.1;
@@ -98,7 +98,7 @@
 .hero-sub { color: #94A3B8; font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; }
 .hero-ctas { display: flex; gap: 1rem; align-items: center; }
 .hero-stats { display: flex; gap: 2rem; margin-top: 3rem; }
-.stat-num { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; color: #E2E8F0; }
+.stat-num { font-family: 'Poppins', sans-serif; font-size: 1.5rem; font-weight: 700; color: #E2E8F0; }
 .stat-label { font-size: 0.8rem; color: #64748B; margin-top: 0.15rem; }
 
 /* Dashboard preview */
@@ -131,7 +131,7 @@
   border: 1px solid rgba(255,255,255,0.07);
 }
 .mini-card-label { font-size: 0.65rem; color: #64748B; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
-.mini-card-val { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; }
+.mini-card-val { font-family: 'Poppins', sans-serif; font-size: 1.4rem; font-weight: 700; }
 .mini-bar-wrap { height: 4px; background: rgba(255,255,255,0.08); border-radius: 100px; margin-top: 0.4rem; overflow: hidden; }
 .mini-bar { height: 100%; border-radius: 100px; }
 .mini-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
@@ -140,7 +140,7 @@
 /* ── Features section ──────────────────────── */
 .section { padding: 4rem 3rem; max-width: 1200px; margin: 0 auto; }
 .section-label { font-size: 0.8rem; color: #6366F1; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
-.section-title { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 700; color: #F1F5F9; margin-bottom: 3rem; }
+.section-title { font-family: 'Poppins', sans-serif; font-size: 2.2rem; font-weight: 700; color: #F1F5F9; margin-bottom: 3rem; }
 .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
 .feature-card {
   padding: 2rem;
@@ -190,7 +190,7 @@
   100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
 }
 .feature-icon { font-size: 1.8rem; margin-bottom: 1rem; }
-.feature-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: #F1F5F9; margin-bottom: 0.75rem; }
+.feature-title { font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 700; color: #F1F5F9; margin-bottom: 0.75rem; }
 .feature-desc { color: #94A3B8; font-size: 0.9rem; line-height: 1.65; }
 .feature-accent { position: absolute; top: 0; right: 0; width: 100px; height: 100px; border-radius: 50%; filter: blur(40px); opacity: 0.3; }
 
@@ -203,14 +203,33 @@
   overflow: hidden;
   background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15));
   border: 1px solid rgba(99,102,241,0.2);
+  box-shadow: 0 0 30px rgba(99,102,241,0.25);
+  animation: ctaPulse 4s ease-in-out infinite;
 }
-.cta-bottom h2 { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; color: #F1F5F9; margin-bottom: 1rem; }
+.cta-bottom h2 { font-family: 'Poppins', sans-serif; font-size: 2.2rem; font-weight: 800; color: #F1F5F9; margin-bottom: 1rem; }
 .cta-bottom p  { color: #94A3B8; margin-bottom: 2rem; font-size: 1rem; }
 
 /* ── Upload page ───────────────────────────── */
-.page-inner { max-width: 700px; margin: 0 auto; padding: 4rem 2rem; }
-.page-title  { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: #F1F5F9; margin-bottom: 0.5rem; }
+.page-inner { max-width: 700px; margin: 0 auto; padding: 4rem 2rem; text-align: center; }
+.page-title  { font-family: 'Poppins', sans-serif; font-size: 2.4rem; font-weight: 800; color: #c1b1ff; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(191, 154, 255, 0.661), 0 0 20px rgba(124,58,237,0.5); }
 .page-sub    { color: #64748B; margin-bottom: 2.5rem; }
+.error-text {
+  color: #EF4444;
+  font-size: 1.05rem;
+  margin-top: 1rem;
+  text-align: center;
+  opacity: 0;
+  text-shadow: 0 0 8px rgba(239,68,68,0.5);
+  font-weight: 700;
+  animation: errorFade 2.2s ease forwards;
+}
+
+@keyframes errorFade {
+  0%   { opacity: 0; transform: translateY(5px); }
+  10%  { opacity: 0.8; transform: translateY(0); }
+  70%  { opacity: 0.8; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-5px); }
+}
 
 .drop-zone {
   border: 2px dashed rgba(99,102,241,0.35);
@@ -224,7 +243,7 @@
 .drop-zone:hover,
 .drop-zone.dragover { border-color: rgba(99,102,241,0.7); background: rgba(99,102,241,0.08); }
 .drop-icon  { font-size: 3rem; margin-bottom: 1rem; }
-.drop-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 600; color: #E2E8F0; margin-bottom: 0.5rem; }
+.drop-title { font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 600; color: #E2E8F0; margin-bottom: 0.5rem; }
 .drop-sub   { color: #64748B; font-size: 0.85rem; }
 .drop-formats { margin-top: 0.75rem; display: flex; justify-content: center; gap: 0.5rem; }
 .format-badge {
@@ -299,9 +318,9 @@
 .steps { display: flex; align-items: center; justify-content: center; margin-bottom: 3rem; }
 .step  { display: flex; align-items: center; }
 .step-circle {
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 44px; height: 44px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.8rem; font-weight: 600;
+  font-size: 1rem; font-weight: 700;
   border: 1px solid rgba(255,255,255,0.1);
   color: #475569;
   background: rgba(255,255,255,0.03);
@@ -337,8 +356,9 @@
 .job-card:hover  { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.2); }
 .job-card.active { background: rgba(99,102,241,0.12); border-color: rgba(99,102,241,0.35); }
 .job-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem; }
-.job-title       { font-size: 0.9rem; font-weight: 500; color: #E2E8F0; line-height: 1.3; }
-.match-badge     { font-size: 0.75rem; font-weight: 700; font-family: 'Syne', sans-serif; flex-shrink: 0; }
+.job-title       { font-size: 1rem; font-weight: 600; color: #E2E8F0; line-height: 1.3; text-shadow: 0 0 8px rgba(99,102,241,0.4); }
+.company-name    { color: #94A3B8; font-weight: 400; }
+.match-badge     { font-size: 0.75rem; font-weight: 700; font-family: 'Poppins', sans-serif; flex-shrink: 0; }
 .job-company     { font-size: 0.78rem; color: #64748B; margin-bottom: 0.6rem; }
 .suitability-label { font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 100px; display: inline-block; margin-bottom: 0.6rem; }
 .suit-high { background: rgba(52,211,153,0.12); color: #6EE7B7; border: 1px solid rgba(52,211,153,0.25); }
@@ -349,7 +369,54 @@
 
 /* List header */
 .list-header { padding: 0.75rem 1.15rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 0.25rem; }
-.list-header-title { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Accordion for Interview Tips */
+.accordion-item {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+.accordion-summary {
+  background: rgba(255,255,255,0.02);
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #E2E8F0;
+  transition: background 0.2s;
+}
+.accordion-summary:hover {
+  background: rgba(255,255,255,0.05);
+}
+.accordion-icon {
+  margin-right: 0.75rem;
+  font-size: 1rem;
+}
+.accordion-content {
+  padding: 1rem;
+  background: rgba(255,255,255,0.01);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tips-list li {
+  padding: 0.25rem 0;
+  color: #94A3B8;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.tips-list li:before {
+  content: '•';
+  color: #6366F1;
+  margin-right: 0.5rem;
+}
+.list-header-title { font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.06em; }
 .list-count { font-size: 0.75rem; color: #475569; margin-top: 0.2rem; }
 
 /* Detail panel */
@@ -357,18 +424,18 @@
 .detail-panel::-webkit-scrollbar       { width: 4px; }
 .detail-panel::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.2); border-radius: 100px; }
 .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
-.detail-job-title { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 700; color: #F1F5F9; }
+.detail-job-title { font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #E2E8F0, #A5B4FC); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 12px rgba(99,102,241,0.5); }
 .detail-company   { color: #64748B; font-size: 0.9rem; margin-top: 0.3rem; }
 .detail-meta      { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.75rem; }
 .meta-chip { font-size: 0.78rem; padding: 0.25rem 0.75rem; border-radius: 100px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #94A3B8; }
 
 .score-row  { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.75rem; }
 .score-card { padding: 1.5rem; border-radius: 16px; text-align: center; }
-.score-num  { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; line-height: 1; }
+.score-num  { font-family: 'Poppins', sans-serif; font-size: 3rem; font-weight: 800; line-height: 1; }
 .score-interp { font-size: 0.85rem; margin-top: 0.4rem; }
 
 .section-card       { padding: 1.5rem; border-radius: 16px; margin-bottom: 1.25rem; }
-.section-card-title { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+.section-card-title { font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
 .tags-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
 /* AI Risk card */
@@ -380,12 +447,12 @@
 .risk-header     { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
 .risk-title-wrap { display: flex; align-items: center; gap: 0.6rem; }
 .risk-icon  { font-size: 1.2rem; }
-.risk-title { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.risk-title { font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
 .risk-badge { font-size: 0.8rem; padding: 0.3rem 0.9rem; border-radius: 100px; font-weight: 600; }
 .risk-low    .risk-badge { background: rgba(52,211,153,0.15);  color: #6EE7B7; border: 1px solid rgba(52,211,153,0.3);  }
 .risk-medium .risk-badge { background: rgba(251,191,36,0.12);  color: #FCD34D; border: 1px solid rgba(251,191,36,0.25); }
 .risk-high   .risk-badge { background: rgba(239,68,68,0.12);   color: #FCA5A5; border: 1px solid rgba(239,68,68,0.3);   }
-.risk-pct  { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.75rem; }
+.risk-pct  { font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.75rem; }
 .risk-low    .risk-pct { color: #34D399; }
 .risk-medium .risk-pct { color: #FCD34D; }
 .risk-high   .risk-pct { color: #FCA5A5; }

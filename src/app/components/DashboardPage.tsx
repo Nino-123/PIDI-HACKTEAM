@@ -1,8 +1,9 @@
 // src/app/components/DashboardPage.tsx
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { JOBS, type Job } from '../data/jobs';
 import { getMatchColor, getRiskClass, getSuitabilityLabel } from '../lib/utils';
+import { InterviewTipsCard } from './ui';
 
 /* ─── Risk glow accent ────────────────────── */
 function RiskGlow({ risk }: { risk: Job['aiRisk'] }) {
@@ -21,10 +22,10 @@ function JobCard({ job, active, onClick }: { job: Job; active: boolean; onClick:
   return (
     <div className={`job-card ${active ? 'active' : ''}`} onClick={onClick}>
       <div className="job-card-header">
-        <div className="job-title">{job.title}</div>
+        <div className="job-title"><span>{job.title}</span> · <span className="company-name">{job.company}</span></div>
         <div className="match-badge" style={{ color }}>{job.match}%</div>
       </div>
-      <div className="job-company">{job.company} · {job.location.split(' · ')[0]}</div>
+      <div className="job-company">{job.location.split(' · ')[0]}</div>
       <div className={`suitability-label suit-${job.suitability}`}>
         {getSuitabilityLabel(job.suitability)}
       </div>
@@ -45,8 +46,7 @@ function DetailPanel({ job }: { job: Job }) {
       {/* Header */}
       <div className="detail-header">
         <div>
-          <div className="detail-job-title">{job.title}</div>
-          <div className="detail-company">{job.company}</div>
+          <div className="detail-job-title"><span>{job.title}</span> · <span className="company-name">{job.company}</span></div>
           <div className="detail-meta">
             <span className="meta-chip">📍 {job.location}</span>
             <span className="meta-chip">💰 {job.salary}</span>
@@ -159,6 +159,9 @@ function DetailPanel({ job }: { job: Job }) {
           </div>
         ))}
       </div>
+
+      {/* Interview Tips */}
+      <InterviewTipsCard job={job} />
     </div>
   );
 }

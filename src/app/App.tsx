@@ -2,7 +2,7 @@
 // Root component — renders the Navbar, background effects, and the
 // currently active page based on `PageKey` state.
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { PageKey } from './routes';
 
 import { Navbar, BackgroundEffects } from './components/ui';

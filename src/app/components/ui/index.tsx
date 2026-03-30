@@ -1,8 +1,6 @@
 // src/app/components/ui/index.tsx
 // Shared, reusable UI primitives used across all pages.
 
-import React from 'react';
-
 /* ─────────────────────────────────────────────
    StepsBar
 ───────────────────────────────────────────── */
@@ -79,6 +77,91 @@ export function AnalyzingSpinner() {
       <div style={{ color: '#64748B', fontSize: '0.85rem' }}>
         Extracting skills, experience and qualifications
       </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   InterviewTipsCard
+───────────────────────────────────────────── */
+interface InterviewTipsCardProps {
+  job: any; // Assuming Job type from data/jobs
+}
+
+function generateInterviewTips(job: any) {
+  // Simple generation based on job title
+  const isTech = job.title.toLowerCase().includes('developer') || job.title.toLowerCase().includes('engineer');
+
+  return {
+    keySkills: isTech ? ['Problem Solving', 'Coding Proficiency', 'System Design'] : ['Leadership', 'Communication', 'Project Management'],
+    questions: {
+      technical: isTech ? ['Explain a complex problem you solved.', 'Describe your experience with [key tech].'] : ['How do you handle team conflicts?', 'Describe a project you led.'],
+      behavioral: ['Tell me about a time you failed and learned from it.', 'How do you prioritize tasks?']
+    },
+    prepare: isTech ? ['GitHub portfolio', 'Personal projects', 'Coding challenges'] : ['Case studies', 'Leadership examples', 'Industry knowledge'],
+    tips: ['Use STAR method: Situation, Task, Action, Result', 'Practice clear communication', 'Research the company thoroughly']
+  };
+}
+
+export function InterviewTipsCard({ job }: InterviewTipsCardProps) {
+  const tips = generateInterviewTips(job);
+
+  return (
+    <div className="section-card glass">
+      <div className="section-card-title" style={{ color: '#94A3B8' }}>🎤 Interview Preparation Tips</div>
+
+      <details className="accordion-item">
+        <summary className="accordion-summary">
+          <span className="accordion-icon">🛠️</span> Key Skills to Prepare
+        </summary>
+        <div className="accordion-content">
+          <ul className="tips-list">
+            {tips.keySkills.map(skill => <li key={skill}>{skill}</li>)}
+          </ul>
+        </div>
+      </details>
+
+      <details className="accordion-item">
+        <summary className="accordion-summary">
+          <span className="accordion-icon">❓</span> Common Interview Questions
+        </summary>
+        <div className="accordion-content">
+          <div style={{ marginBottom: '1rem' }}>
+            <strong>Technical:</strong>
+            <ul className="tips-list">
+              {tips.questions.technical.map(q => <li key={q}>{q}</li>)}
+            </ul>
+          </div>
+          <div>
+            <strong>Behavioral:</strong>
+            <ul className="tips-list">
+              {tips.questions.behavioral.map(q => <li key={q}>{q}</li>)}
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <details className="accordion-item">
+        <summary className="accordion-summary">
+          <span className="accordion-icon">📋</span> Things to Prepare
+        </summary>
+        <div className="accordion-content">
+          <ul className="tips-list">
+            {tips.prepare.map(item => <li key={item}>{item}</li>)}
+          </ul>
+        </div>
+      </details>
+
+      <details className="accordion-item">
+        <summary className="accordion-summary">
+          <span className="accordion-icon">💡</span> Tips for Answering
+        </summary>
+        <div className="accordion-content">
+          <ul className="tips-list">
+            {tips.tips.map(tip => <li key={tip}>{tip}</li>)}
+          </ul>
+        </div>
+      </details>
     </div>
   );
 }

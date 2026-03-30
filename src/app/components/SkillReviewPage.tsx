@@ -1,6 +1,6 @@
 // src/app/components/SkillReviewPage.tsx
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StepsBar } from './ui';
 import { SKILLS_INITIAL, type Skill } from '../data/jobs';
 
