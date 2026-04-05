@@ -18,12 +18,13 @@ export function StepsBar({ step }: StepsBarProps) {
         return (
           <div key={i} className="step">
             {i > 0 && <div className={`step-line ${i <= step ? 'done' : ''}`} />}
-            <div className={`step-circle ${isDone ? 'done' : isActive ? 'active' : ''}`}>
+            <div
+              className={`step-circle ${isDone ? 'done' : isActive ? 'active' : ''}`}
+              aria-label={label}
+              title={label}
+            >
               {isDone ? '✓' : i + 1}
             </div>
-            <span className={`step-label ${isDone ? 'done' : isActive ? 'active' : ''}`}>
-              {label}
-            </span>
           </div>
         );
       })}
@@ -36,15 +37,29 @@ export function StepsBar({ step }: StepsBarProps) {
 ───────────────────────────────────────────── */
 interface NavbarProps {
   onNavigate: (page: string) => void;
+  page: string;
 }
 
-export function Navbar({ onNavigate }: NavbarProps) {
+export function Navbar({ onNavigate, page }: NavbarProps) {
+  const getNavLinks = () => {
+    switch (page) {
+      case 'landing':
+        return (
+          <button className="nav-btn" onClick={() => onNavigate('upload')}>
+            <span className="nav-btn-label">Upload CV</span>
+            <span className="nav-btn-icon" aria-hidden="true">→</span>
+          </button>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <nav className="nav">
       <div className="nav-logo" onClick={() => onNavigate('landing')}>CareerAI</div>
       <div className="nav-links">
-        <button className="nav-link" onClick={() => onNavigate('landing')}>Home</button>
-        <button className="nav-btn"  onClick={() => onNavigate('upload')}>Upload CV →</button>
+        {getNavLinks()}
       </div>
     </nav>
   );

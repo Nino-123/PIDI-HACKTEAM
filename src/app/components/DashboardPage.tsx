@@ -1,6 +1,6 @@
 // src/app/components/DashboardPage.tsx
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { JOBS, type Job } from '../data/jobs';
 import { getMatchColor, getRiskClass, getSuitabilityLabel } from '../lib/utils';
 import { InterviewTipsCard } from './ui';
@@ -19,8 +19,19 @@ function RiskGlow({ risk }: { risk: Job['aiRisk'] }) {
 /* ─── Job card (left panel) ───────────────── */
 function JobCard({ job, active, onClick }: { job: Job; active: boolean; onClick: () => void }) {
   const color = getMatchColor(job.match);
+  const companyInitials = job.company
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(word => word[0]?.toUpperCase() ?? '')
+    .join('');
+
   return (
     <div className={`job-card ${active ? 'active' : ''}`} onClick={onClick}>
+      <div className="job-card-brand">
+        <div className="job-logo" aria-hidden="true">{companyInitials}</div>
+        <span className="job-open-cta">View Details</span>
+      </div>
       <div className="job-card-header">
         <div className="job-title"><span>{job.title}</span> · <span className="company-name">{job.company}</span></div>
         <div className="match-badge" style={{ color }}>{job.match}%</div>
@@ -168,28 +179,97 @@ function DetailPanel({ job }: { job: Job }) {
 
 /* ─── Dashboard page ──────────────────────── */
 export default function DashboardPage() {
-  const [selected, setSelected] = useState<Job>(JOBS[0]);
+  const [selected, setSelected] = useState<Job | null>(null);
+  const [sortOrder, setSortOrder] = useState<'high-to-low' | 'low-to-high'>('high-to-low');
+  const [suitabilityFilter, setSuitabilityFilter] = useState<'all' | Job['suitability']>('all');
+
+  const visibleJobs = useMemo(() => {
+    const suitabilityWeight: Record<Job['suitability'], number> = {
+      high: 3,
+      mid: 2,
+      low: 1,
+    };
+
+    const filteredJobs = suitabilityFilter === 'all'
+      ? JOBS
+      : JOBS.filter(job => job.suitability === suitabilityFilter);
+
+    return [...filteredJobs].sort((a, b) => {
+      const weightDiff = suitabilityWeight[b.suitability] - suitabilityWeight[a.suitability];
+      if (sortOrder === 'high-to-low') {
+        return weightDiff !== 0 ? weightDiff : b.match - a.match;
+      }
+      return weightDiff !== 0 ? -weightDiff : a.match - b.match;
+    });
+  }, [sortOrder, suitabilityFilter]);
+
+  if (!selected) {
+    return (
+      <div className="dashboard content">
+        <div className="dashboard-overview">
+          <div className="list-header dashboard-overview-header">
+            <div className="list-header-main">
+              <div className="list-header-title">Matched Roles</div>
+              <div className="list-count">{visibleJobs.length} opportunities found</div>
+            </div>
+            <div className="roles-filter-wrap">
+              <div className="roles-filter-group">
+                <label htmlFor="roles-sort" className="roles-filter-label">Sort by suitability</label>
+                <select
+                  id="roles-sort"
+                  className="roles-filter-select"
+                  value={sortOrder}
+                  onChange={event => setSortOrder(event.target.value as 'high-to-low' | 'low-to-high')}
+                >
+                  <option value="high-to-low">Highly Suitable to Needs Improvement</option>
+                  <option value="low-to-high">Needs Improvement to Highly Suitable</option>
+                </select>
+              </div>
+              <div className="roles-filter-group">
+                <label htmlFor="roles-level" className="roles-filter-label">Show level</label>
+                <select
+                  id="roles-level"
+                  className="roles-filter-select"
+                  value={suitabilityFilter}
+                  onChange={event => setSuitabilityFilter(event.target.value as 'all' | Job['suitability'])}
+                >
+                  <option value="all">All suitability levels</option>
+                  <option value="high">Highly Suitable only</option>
+                  <option value="mid">Moderately Suitable only</option>
+                  <option value="low">Needs Improvement only</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="roles-grid">
+            {visibleJobs.map(job => (
+              <JobCard
+                key={job.id}
+                job={job}
+                active={false}
+                onClick={() => setSelected(job)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard content">
-      {/* Left panel */}
-      <div className="job-list">
-        <div className="list-header">
-          <div className="list-header-title">Matched Roles</div>
-          <div className="list-count">{JOBS.length} opportunities found</div>
+      <div className="dashboard-detail-shell">
+        <div className="dashboard-detail-toolbar">
+          <button
+            className="btn-secondary dashboard-back-btn"
+            onClick={() => setSelected(null)}
+          >
+            ← Back to matched roles
+          </button>
         </div>
-        {JOBS.map(job => (
-          <JobCard
-            key={job.id}
-            job={job}
-            active={selected.id === job.id}
-            onClick={() => setSelected(job)}
-          />
-        ))}
+        <DetailPanel job={selected} />
       </div>
-
-      {/* Right panel */}
-      <DetailPanel job={selected} />
     </div>
   );
 }

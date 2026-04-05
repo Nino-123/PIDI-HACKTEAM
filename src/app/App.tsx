@@ -26,7 +26,7 @@ export default function App() {
     <div className="app">
       <BackgroundEffects />
 
-      <Navbar onNavigate={navigate} />
+      <Navbar onNavigate={navigate} page={page} />
 
       {page === 'landing'   && <LandingPage   onStart={() => navigate('upload')}    />}
       {page === 'upload'    && <UploadPage     onNext={() => navigate('skills')}     />}
