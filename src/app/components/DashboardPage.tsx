@@ -1,6 +1,6 @@
 // src/app/components/DashboardPage.tsx
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { JOBS, type Job } from '../data/jobs';
 import { getMatchColor, getRiskClass, getSuitabilityLabel } from '../lib/utils';
 import { InterviewTipsCard } from './ui';
@@ -14,6 +14,24 @@ function RiskGlow({ risk }: { risk: Job['aiRisk'] }) {
       style={{ background: colors[risk] }}
     />
   );
+}
+
+function getApplicationPageUrl(job: Job): string {
+  const companyCareerPages: Record<string, string> = {
+    Stripe: 'https://stripe.com/jobs/search',
+    Anthropic: 'https://www.anthropic.com/careers',
+    Netflix: 'https://jobs.netflix.com/',
+    Shopify: 'https://www.shopify.com/careers',
+    Zendesk: 'https://www.zendesk.com/company/careers/',
+  };
+
+  const knownPage = companyCareerPages[job.company];
+  if (knownPage) {
+    return knownPage;
+  }
+
+  const query = encodeURIComponent(`${job.title} ${job.company} careers`);
+  return `https://www.google.com/search?q=${query}`;
 }
 
 /* ─── Job card (left panel) ───────────────── */
@@ -52,6 +70,10 @@ function DetailPanel({ job }: { job: Job }) {
   const matchColor = getMatchColor(job.match);
   const riskColor  = job.aiRisk === 'low' ? '#34D399' : job.aiRisk === 'medium' ? '#FCD34D' : '#EF4444';
 
+  const handleOpenApplicationPage = () => {
+    window.open(getApplicationPageUrl(job), '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="detail-panel">
       {/* Header */}
@@ -64,7 +86,13 @@ function DetailPanel({ job }: { job: Job }) {
             <span className="meta-chip">⏱ Full-time</span>
           </div>
         </div>
-        <button className="btn-primary" style={{ flexShrink: 0 }}>Apply Now</button>
+        <button
+          className="btn-primary"
+          style={{ flexShrink: 0 }}
+          onClick={handleOpenApplicationPage}
+        >
+          Open Application Page
+        </button>
       </div>
 
       {/* Score row */}
@@ -182,6 +210,8 @@ export default function DashboardPage() {
   const [selected, setSelected] = useState<Job | null>(null);
   const [sortOrder, setSortOrder] = useState<'high-to-low' | 'low-to-high'>('high-to-low');
   const [suitabilityFilter, setSuitabilityFilter] = useState<'all' | Job['suitability']>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const rolesPerPage = 6;
 
   const visibleJobs = useMemo(() => {
     const suitabilityWeight: Record<Job['suitability'], number> = {
@@ -202,6 +232,23 @@ export default function DashboardPage() {
       return weightDiff !== 0 ? -weightDiff : a.match - b.match;
     });
   }, [sortOrder, suitabilityFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(visibleJobs.length / rolesPerPage));
+
+  const paginatedJobs = useMemo(() => {
+    const start = (currentPage - 1) * rolesPerPage;
+    return visibleJobs.slice(start, start + rolesPerPage);
+  }, [currentPage, rolesPerPage, visibleJobs]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [sortOrder, suitabilityFilter]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   if (!selected) {
     return (
@@ -243,7 +290,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="roles-grid">
-            {visibleJobs.map(job => (
+            {paginatedJobs.map(job => (
               <JobCard
                 key={job.id}
                 job={job}
@@ -251,6 +298,28 @@ export default function DashboardPage() {
                 onClick={() => setSelected(job)}
               />
             ))}
+          </div>
+
+          <div className="roles-pagination">
+            <div className="roles-pagination-meta">
+              Page {currentPage} of {totalPages}
+            </div>
+            <div className="roles-pagination-actions">
+              <button
+                className="btn-secondary roles-page-btn"
+                onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <button
+                className="btn-secondary roles-page-btn"
+                onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Next Page →
+              </button>
+            </div>
           </div>
         </div>
       </div>

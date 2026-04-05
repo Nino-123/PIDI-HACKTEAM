@@ -490,6 +490,43 @@
   min-height: 220px;
 }
 
+.roles-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  background: rgba(15,23,42,0.45);
+  padding: 0.75rem 1rem;
+}
+
+.roles-pagination-meta {
+  color: #94A3B8;
+  font-size: 0.8rem;
+}
+
+.roles-pagination-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.roles-page-btn {
+  padding: 0.48rem 0.85rem;
+  font-size: 0.8rem;
+}
+
+.roles-page-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.roles-page-btn:disabled:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+}
+
 .dashboard-detail-shell {
   display: flex;
   flex-direction: column;
@@ -788,6 +825,15 @@
     grid-template-columns: 1fr 1fr;
   }
 
+  .roles-pagination {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .roles-pagination-actions {
+    justify-content: flex-end;
+  }
+
   .job-list {
     max-height: 42vh;
     border-right: none;
@@ -873,6 +919,14 @@
 
   .section {
     padding: 2.6rem 1rem;
+  }
+
+  .roles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .roles-pagination-actions {
+    justify-content: space-between;
   }
 
   .section-title {
