@@ -1,6 +1,8 @@
 // src/app/components/ui/index.tsx
 // Shared, reusable UI primitives used across all pages.
 
+import type { Job } from '../../data/jobs';
+
 /* ─────────────────────────────────────────────
    StepsBar
 ───────────────────────────────────────────── */
@@ -100,21 +102,234 @@ export function AnalyzingSpinner() {
    InterviewTipsCard
 ───────────────────────────────────────────── */
 interface InterviewTipsCardProps {
-  job: any; // Assuming Job type from data/jobs
+  job: Job;
 }
 
-function generateInterviewTips(job: any) {
-  // Simple generation based on job title
-  const isTech = job.title.toLowerCase().includes('developer') || job.title.toLowerCase().includes('engineer');
+interface InterviewTips {
+  keySkills: string[];
+  questions: {
+    technical: string[];
+    behavioral: string[];
+  };
+  prepare: string[];
+  tips: string[];
+}
+
+const ROLE_INTERVIEW_TIPS: Record<string, InterviewTips> = {
+  'Senior Product Manager': {
+    keySkills: ['Product Strategy', 'Roadmapping', 'Stakeholder Management'],
+    questions: {
+      technical: [
+        'How would you define and track success metrics for a new payments feature at Stripe?',
+        'Walk through how you prioritise roadmap items when engineering capacity is limited.',
+      ],
+      behavioral: [
+        'Tell me about a time you aligned conflicting stakeholder priorities.',
+        'Describe a product decision that failed and what you changed afterward.',
+      ],
+    },
+    prepare: ['One product case study with metric impact', 'A roadmap sample and prioritisation rationale', 'Examples of cross-functional collaboration'],
+    tips: ['Anchor answers in customer problem and business impact', 'Use clear KPI language (adoption, conversion, retention)', 'Show tradeoff thinking, not just feature ideas'],
+  },
+  'Machine Learning Engineer': {
+    keySkills: ['Model Architecture', 'PyTorch', 'MLOps'],
+    questions: {
+      technical: [
+        'How do you evaluate and debug model performance regressions in production?',
+        'Explain your approach to distributed training and experiment tracking.',
+      ],
+      behavioral: [
+        'Tell me about a model you shipped under tight constraints.',
+        'Describe a disagreement with a researcher or engineer and how you resolved it.',
+      ],
+    },
+    prepare: ['A model deployment project with measurable outcomes', 'Knowledge of transformer optimization techniques', 'Examples of training-cost/performance tradeoffs'],
+    tips: ['State dataset assumptions explicitly', 'Discuss failure modes and mitigation', 'Highlight reproducibility and monitoring practices'],
+  },
+  'Data Scientist': {
+    keySkills: ['Experiment Design', 'Causal Inference', 'SQL'],
+    questions: {
+      technical: [
+        'How would you design an A/B test for a recommendation ranking change?',
+        'When would you choose causal inference over predictive modeling?',
+      ],
+      behavioral: [
+        'Describe a time your analysis changed a business decision.',
+        'Tell me about communicating uncertainty to non-technical stakeholders.',
+      ],
+    },
+    prepare: ['One end-to-end experiment case', 'SQL examples involving cohorts/funnels', 'A dashboard or narrative from real analysis'],
+    tips: ['Emphasize decision impact over model complexity', 'Quantify lift, confidence, and risks', 'Show how you validate data quality early'],
+  },
+  'Marketing Manager': {
+    keySkills: ['Campaign Strategy', 'Performance Marketing', 'Attribution'],
+    questions: {
+      technical: [
+        'How would you allocate budget across channels for a new product launch?',
+        'What attribution approach would you use for multi-channel campaigns and why?',
+      ],
+      behavioral: [
+        'Share a campaign that underperformed and what you changed.',
+        'How do you balance brand goals with short-term performance targets?',
+      ],
+    },
+    prepare: ['A campaign post-mortem with KPI movement', 'Channel budget planning framework', 'Examples of creative testing results'],
+    tips: ['Tie creative choices to measurable outcomes', 'Use CAC/ROAS/LTV terminology confidently', 'Show iterative testing mindset'],
+  },
+  'Customer Support Specialist': {
+    keySkills: ['Customer Communication', 'Issue Triage', 'CRM Workflow'],
+    questions: {
+      technical: [
+        'How do you diagnose and route complex customer issues efficiently?',
+        'How would you use support analytics to reduce repeat tickets?',
+      ],
+      behavioral: [
+        'Describe handling an escalated customer case under pressure.',
+        'Tell me about improving a support process for your team.',
+      ],
+    },
+    prepare: ['Examples of difficult customer interactions', 'Your escalation and SLA handling approach', 'Ideas to improve support macros/knowledge base'],
+    tips: ['Show empathy plus structure in every answer', 'Demonstrate ownership until issue resolution', 'Highlight how you document learnings for the team'],
+  },
+  'Cloud Solutions Architect': {
+    keySkills: ['System Design', 'Cloud Security', 'Cost Optimization'],
+    questions: {
+      technical: [
+        'Design a highly available architecture for a regional fintech workload.',
+        'How do you balance reliability, security, and cloud cost in architecture decisions?',
+      ],
+      behavioral: [
+        'Tell me about persuading stakeholders to adopt a new architecture.',
+        'Describe a migration project with major risk and how you handled it.',
+      ],
+    },
+    prepare: ['Architecture diagrams with tradeoff notes', 'One migration or scaling case', 'Security and disaster recovery strategy examples'],
+    tips: ['Explain choices with explicit constraints', 'Mention failure scenarios and DR plans', 'Use business language when discussing architecture'],
+  },
+  'Backend Engineer': {
+    keySkills: ['API Design', 'Distributed Systems', 'Performance Optimization'],
+    questions: {
+      technical: [
+        'How would you design an idempotent API for payment processing?',
+        'What is your approach to diagnosing latency in a high-throughput service?',
+      ],
+      behavioral: [
+        'Describe a production incident and your role in resolving it.',
+        'Tell me about collaborating with frontend/product to refine API contracts.',
+      ],
+    },
+    prepare: ['Service design example with scaling strategy', 'A performance tuning story with metrics', 'Testing approach (unit, integration, contract)'],
+    tips: ['Discuss reliability patterns (retry, circuit breaker, queue)', 'Include observability in technical answers', 'Quantify impact (latency, error rate, throughput)'],
+  },
+  'UX Researcher': {
+    keySkills: ['User Interviews', 'Insight Synthesis', 'Experiment Design'],
+    questions: {
+      technical: [
+        'How do you choose between qualitative and quantitative methods for a feature?',
+        'Walk through your process from research planning to actionable insights.',
+      ],
+      behavioral: [
+        'Tell me about a time research contradicted stakeholder assumptions.',
+        'How did you influence product decisions with your findings?',
+      ],
+    },
+    prepare: ['A research case study portfolio', 'Interview guide and synthesis sample', 'Examples of translating findings into product changes'],
+    tips: ['Focus on user problem clarity, not just methods', 'Explain prioritization of insights', 'Show how you close the loop with product teams'],
+  },
+  'Cybersecurity Analyst': {
+    keySkills: ['Threat Detection', 'Incident Response', 'Risk Assessment'],
+    questions: {
+      technical: [
+        'How would you triage a suspicious login pattern across multiple regions?',
+        'What signals do you prioritize when writing high-quality detection rules?',
+      ],
+      behavioral: [
+        'Describe an incident where quick communication prevented escalation.',
+        'Tell me about improving a security process after a postmortem.',
+      ],
+    },
+    prepare: ['Incident investigation walkthrough', 'Detection logic examples', 'Understanding of MITRE ATT&CK mapping'],
+    tips: ['Structure answers by detection, containment, recovery', 'Balance false positives and coverage in explanations', 'Demonstrate calm, clear communication under pressure'],
+  },
+  'Business Intelligence Analyst': {
+    keySkills: ['KPI Modeling', 'Dashboard Design', 'Stakeholder Communication'],
+    questions: {
+      technical: [
+        'How do you ensure KPI definitions remain consistent across teams?',
+        'Describe your approach to building an executive dashboard from raw data.',
+      ],
+      behavioral: [
+        'Tell me about a time you challenged a misleading metric.',
+        'Describe how you handled conflicting requests from multiple business teams.',
+      ],
+    },
+    prepare: ['Portfolio of dashboards with decision outcomes', 'Metric dictionary example', 'Data quality validation checklist'],
+    tips: ['Prioritize business questions before visual design', 'State assumptions and data limitations clearly', 'Emphasize actionable insights over chart volume'],
+  },
+  'DevOps Engineer': {
+    keySkills: ['CI/CD', 'Observability', 'Infrastructure Automation'],
+    questions: {
+      technical: [
+        'How would you design a safe deployment strategy for a critical service?',
+        'What telemetry do you require before declaring a release healthy?',
+      ],
+      behavioral: [
+        'Share an outage you handled and what changed afterward.',
+        'Describe how you collaborated with developers to improve delivery speed.',
+      ],
+    },
+    prepare: ['Pipeline architecture and rollback strategy', 'Monitoring dashboard examples', 'One incident postmortem with preventive actions'],
+    tips: ['Frame answers around reliability and delivery velocity balance', 'Mention automation and guardrails together', 'Quantify improvements in MTTR, failure rate, or deploy frequency'],
+  },
+  'Junior QA Engineer': {
+    keySkills: ['Test Design', 'Bug Analysis', 'Automation Fundamentals'],
+    questions: {
+      technical: [
+        'How do you prioritize test cases when release time is limited?',
+        'Explain how you would start automating a repetitive regression flow.',
+      ],
+      behavioral: [
+        'Tell me about reporting a critical bug and coordinating with developers.',
+        'Describe a time you improved test coverage with limited resources.',
+      ],
+    },
+    prepare: ['Sample test plan and bug reports', 'Basic automation script examples', 'Clear understanding of severity vs priority'],
+    tips: ['Use risk-based testing language', 'Be explicit about reproduction steps and evidence', 'Show growth mindset toward automation and quality strategy'],
+  },
+};
+
+function generateInterviewTips(job: Job): InterviewTips {
+  const specificTips = ROLE_INTERVIEW_TIPS[job.title];
+  if (specificTips) {
+    return specificTips;
+  }
+
+  // Fallback stays role-aware by using each job's own attributes.
+  const roleSkills = job.matchedSkills.slice(0, 3);
+  const gapFocus = job.gapSkills.slice(0, 2);
 
   return {
-    keySkills: isTech ? ['Problem Solving', 'Coding Proficiency', 'System Design'] : ['Leadership', 'Communication', 'Project Management'],
+    keySkills: roleSkills.length ? roleSkills : ['Communication', 'Problem Solving', 'Collaboration'],
     questions: {
-      technical: isTech ? ['Explain a complex problem you solved.', 'Describe your experience with [key tech].'] : ['How do you handle team conflicts?', 'Describe a project you led.'],
-      behavioral: ['Tell me about a time you failed and learned from it.', 'How do you prioritize tasks?']
+      technical: [
+        `How would you apply ${roleSkills[0] ?? 'your core skill'} to deliver impact in this ${job.title} role?`,
+        `Which approach would you use to improve one of these gap areas: ${gapFocus.join(', ') || 'role requirements'}?`,
+      ],
+      behavioral: [
+        `Tell me about a project that best reflects your fit for ${job.title}.`,
+        'Describe how you handle tight deadlines and shifting priorities.',
+      ],
     },
-    prepare: isTech ? ['GitHub portfolio', 'Personal projects', 'Coding challenges'] : ['Case studies', 'Leadership examples', 'Industry knowledge'],
-    tips: ['Use STAR method: Situation, Task, Action, Result', 'Practice clear communication', 'Research the company thoroughly']
+    prepare: [
+      `One portfolio example relevant to ${job.title}`,
+      'A clear summary of measurable outcomes from your past work',
+      `Concrete plan to close gaps in ${gapFocus.join(' and ') || 'critical skills'}`,
+    ],
+    tips: [
+      `Research ${job.company}'s product, market, and hiring expectations`,
+      'Use STAR with metrics to keep answers concise and credible',
+      'Connect every answer to role impact, collaboration, and learning agility',
+    ],
   };
 }
 
