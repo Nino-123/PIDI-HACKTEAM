@@ -8,6 +8,14 @@ CareerAI is an AI-powered career intelligence platform that helps users upload t
 
 ---
 
+## Current Status
+
+- The project is a front-end prototype built with React + TypeScript + Vite.
+- Page flow is currently handled by local React state in `App.tsx` (not browser URL routing yet).
+- `routes.tsx` provides a central route map and labels for future router integration.
+
+---
+
 ## Project Structure
 
 ```
@@ -50,7 +58,7 @@ src/
 npm install
 
 # Start dev server
-npm dev
+npm run dev
 ```
 
 Then open [http://localhost:5173](http://localhost:5173).
@@ -58,12 +66,34 @@ Then open [http://localhost:5173](http://localhost:5173).
 ### Build
 
 ```bash
-npm build
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+### Lint
+
+```bash
+npm run lint
 ```
 
 ---
 
-## Pages
+## App Flow (Current)
+
+The app currently renders a single-page flow using state-based navigation:
+
+1. `landing` -> `upload` -> `skills` -> `dashboard`
+2. Navigation is handled by `navigate()` in `App.tsx`.
+3. URL paths listed in `routes.tsx` are design-ready route definitions, not active router paths yet.
+
+---
+
+## Planned Route Map
 
 | Route       | Component          | Description                          |
 |-------------|--------------------|--------------------------------------|
